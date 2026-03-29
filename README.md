@@ -1,33 +1,33 @@
 # 🌿 AgriEcho – AI Crop Disease Detection System
 
-## 📌 Overview
+## Overview
 AgriEcho is an AI-powered web application that helps farmers detect crop diseases using image analysis. It provides multilingual support (English, Tamil, Hindi) along with voice assistance, making it easy for farmers to understand results.
 
 ---
 
-## 🎯 Problem Statement
+## Problem Statement
 Farmers often struggle to identify crop diseases early, which leads to reduced yield and financial loss. Access to experts is limited, especially in rural areas.
 
 ---
 
-## 💡 Solution
+## Solution
 AgriEcho uses a trained machine learning model to analyze crop images and detect diseases. It provides simple solutions in multiple languages with voice output support.
 
 ---
 
-## ✨ Features
-- 📸 Upload crop image for disease detection
-- 🤖 AI-based prediction using TensorFlow model
-- 🌍 Multilingual support (English, Tamil, Hindi)
-- 🔊 Voice output for better understanding
-- 👤 User authentication (Login/Register)
-- 📊 Dashboard with disease analytics
-- 🗂️ Crop history tracking
-- 🌐 Works in low or no internet environments
+##  Features
+-  Upload crop image for disease detection
+-  AI-based prediction using TensorFlow model
+-  Multilingual support (English, Tamil, Hindi)
+-  Voice output for better understanding
+-  User authentication (Login/Register)
+-  Dashboard with disease analytics
+-  Crop history tracking
+-  Works in low or no internet environments
 
 ---
 
-## 🛠️ Tech Stack
+##  Tech Stack
 - Backend: Flask (Python)
 - Machine Learning: TensorFlow / Keras
 - Frontend: HTML, CSS, JavaScript
@@ -36,7 +36,7 @@ AgriEcho uses a trained machine learning model to analyze crop images and detect
 ---
 
 
-## 📂 Project Structure
+##  Project Structure
 
 agri-echo/
 │
@@ -53,7 +53,7 @@ agri-echo/
 
 ---
 
-## 🚀 How to Run
+##  How to Run
 
 ### 1. Clone Repository
 
@@ -85,7 +85,7 @@ http://127.0.0.1:5000
 
 ---
 
-## 📊 How It Works
+##  How It Works
 1. User uploads crop image
 2. Image is processed using ML model
 3. Disease is predicted
@@ -95,13 +95,13 @@ http://127.0.0.1:5000
 
 ---
 
-## 🌍 Offline Capability
+##  Offline Capability
 AgriEcho is designed to work in low or no internet environments. The AI model, backend, and database run locally, making it suitable for rural farming areas.
 
 ---
 
 
-## 🚀 Future Improvements
+##  Future Improvements
 - Mobile application version
 - More crop disease datasets
 - Real-time camera detection
