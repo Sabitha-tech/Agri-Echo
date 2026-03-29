@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Agri Echo 🌱</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(to right, #e6f4ea, #c8e6c9);
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            width: 380px;
+            text-align: center;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+        }
+
+        h1 {
+            color: #2e7d32;
+        }
+
+        select, input {
+            width: 90%;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            width: 90%;
+            padding: 12px;
+            margin-top: 10px;
+            border-radius: 10px;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            transform: scale(1.03);
+        }
+
+        .predict-btn {
+            background: #2e7d32;
+            color: white;
+        }
+
+        .speak-btn {
+            background: #81c784;
+        }
+
+        .result-box {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            background: #f1f8e9;
+        }
+
+        #result {
+            font-weight: bold;
+            color: #1b5e20;
+        }
+
+        #loading {
+            display: none;
+            color: #2e7d32;
+            margin-top: 10px;
+        }
+    /* 🌿 NAVBAR */
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 65px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 0 25px;
+  box-sizing: border-box;
+
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  z-index: 1000;
+}
+
+/* 🌿 LOGO */
+.logo {
+  font-size: 22px;
+  font-weight: 700;
+  color: #0a5c2b;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* 👉 NAV LINKS */
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+/* 🔗 LINKS */
+.nav-links a {
+  text-decoration: none;
+  color: #333;
+  font-size: 15px;
+  font-weight: 500;
+  transition: 0.3s;
+  white-space: nowrap;
+}
+
+/* ✨ HOVER EFFECT */
+.nav-links a:hover {
+  color: #0a5c2b;
+}
+
+/* 🚪 LOGOUT BUTTON (SPECIAL STYLE) */
+.logout-btn {
+  background: #ef5350;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 8px;
+}
+
+.logout-btn:hover {
+  background: #d32f2f;
+}
+
+/* 📱 RESPONSIVE (SMALL SCREEN FIX) */
+@media (max-width: 600px) {
+  .nav {
+    padding: 0 10px;
+  }
+
+  .nav-links {
+    gap: 10px;
+  }
+
+  .logo {
+    font-size: 18px;
+  }
+}
+
+/* 📌 PUSH CONTENT DOWN */
+body {
+  padding-top: 70px;
+}
+.nav {
+  border-bottom: 2px solid #e0f2f1;
+}
+  
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+<div class="card">
+    <div class="nav">
+
+  <div class="logo">🌿 AgriEcho</div>
+
+  <div class="nav-links">
+    <a href="/index">Home</a>
+    <a href="/profile">Profile</a>
+    <a href="/dashboard">Analytics</a>
+    <a href="#" onclick="logout()">Logout</a>
+  </div>
+
+</div>
+
+    <h1 id="title"></h1>
+    <p id="subtitle"></p>
+
+    <select id="lang">
+        <option value="en">English</option>
+        <option value="ta">Tamil</option>
+        <option value="hi">Hindi</option>
+    </select>
+
+    <input type="file" id="imageInput">
+
+    <img id="preview" style="width:100%; margin-top:10px; display:none; border-radius:10px;">
+
+    <div id="loading"></div>
+
+    <button class="predict-btn" id="analyzeBtn" onclick="predict()"></button>
+
+    <div class="result-box">
+        <div id="result"></div>
+        <div id="solution"></div>
+    </div>
+
+    <button class="speak-btn" id="listenBtn" onclick="speak()"></button>
+
+    <button id="profileBtn" onclick="goProfile()"></button>
+
+</div>
+</div>
+
+<script>
+
+const uiText = {
+    en: {
+        title: "Agri Echo",
+        subtitle: "AI-powered crop disease detection",
+        analyze: "Analyze Crop",
+        listen: "Listen",
+        profile: "Profile",
+        loading: "Analyzing crop..."
+    },
+    ta: {
+        title: "அக்ரி எக்கோ",
+        subtitle: "பயிர் நோய் கண்டறிதல்",
+        analyze: "பரிசோதிக்கவும்",
+        listen: "கேளுங்கள்",
+        profile: "சுயவிவரம்",
+        loading: "பயிர் பரிசோதிக்கப்படுகிறது..."
+    },
+    hi: {
+        title: "एग्री इको",
+        subtitle: "फसल रोग पहचान",
+        analyze: "जांच करें",
+        listen: "सुनें",
+        profile: "प्रोफ़ाइल",
+        loading: "फसल जांच हो रही है..."
+    }
+};
+
+function applyLanguage() {
+    let lang = localStorage.getItem("lang") || "en";
+
+    document.getElementById("title").innerText = "🌿 " + uiText[lang].title;
+    document.getElementById("subtitle").innerText = uiText[lang].subtitle;
+    document.getElementById("analyzeBtn").innerText = "🔍 " + uiText[lang].analyze;
+    document.getElementById("listenBtn").innerText = "🔊 " + uiText[lang].listen;
+    document.getElementById("profileBtn").innerText = "👤 " + uiText[lang].profile;
+    document.getElementById("loading").innerText = "⏳ " + uiText[lang].loading;
+
+    document.getElementById("lang").value = lang;
+}
+
+window.onload = applyLanguage;
+
+document.getElementById("lang").onchange = function() {
+    localStorage.setItem("lang", this.value);
+    applyLanguage();
+};
+
+function predict() {
+
+    let file = document.getElementById("imageInput").files[0];
+
+    if (!file) {
+        alert("Upload image first");
+        return;
+    }
+
+    document.getElementById("loading").style.display = "block";
+
+    let formData = new FormData();
+    formData.append("image", file);
+
+    let lang = document.getElementById("lang").value;
+    formData.append("lang", lang);
+
+    let username = localStorage.getItem("username");
+    formData.append("username", username);
+
+    fetch("/predict", {
+        method: "POST",
+        body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+
+        document.getElementById("loading").style.display = "none";
+
+        document.getElementById("result").innerText = data.disease;
+        document.getElementById("solution").innerText = data.solution;
+    });
+}
+
+function speak() {
+
+    let lang = localStorage.getItem("lang") || "en";
+
+    let text = document.getElementById("result").innerText + ". " +
+               document.getElementById("solution").innerText;
+
+    let speech = new SpeechSynthesisUtterance(text);
+
+    let voices = window.speechSynthesis.getVoices();
+
+    // 🔍 Find matching voice
+    let selectedVoice = null;
+
+    if (lang === "ta") {
+        selectedVoice = voices.find(v => v.lang.includes("ta"));
+    } 
+    else if (lang === "hi") {
+        selectedVoice = voices.find(v => v.lang.includes("hi"));
+    } 
+    else {
+        selectedVoice = voices.find(v => v.lang.includes("en"));
+    }
+
+    // ✅ fallback (VERY IMPORTANT)
+    if (!selectedVoice) {
+        selectedVoice = voices[0];
+    }
+
+    speech.voice = selectedVoice;
+
+    window.speechSynthesis.cancel();
+    window.speechSynthesis.speak(speech);
+}
+
+// Image preview
+document.getElementById("imageInput").onchange = function(event) {
+    let preview = document.getElementById("preview");
+    preview.src = URL.createObjectURL(event.target.files[0]);
+    preview.style.display = "block";
+};
+
+
+function goHome(){
+  window.location.href = "/index";
+}
+
+function goProfile(){
+  window.location.href = "/profile";
+}
+
+function goDashboard(){
+  window.location.href = "/dashboard";
+}
+
+function logout(){
+  localStorage.removeItem("username");
+  window.location.href = "/";
+}
+
+</script>
+
+</body>
+</html>

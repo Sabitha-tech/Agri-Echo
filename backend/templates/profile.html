@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Farmer Dashboard 🌿</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(to right, #e6f4ea, #c8e6c9);
+    padding-top: 70px;
+}
+
+/* 🌿 NAVBAR */
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 65px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 0 25px;
+  box-sizing: border-box;
+
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  z-index: 1000;
+}
+
+.logo {
+  font-size: 22px;
+  font-weight: bold;
+  color: #0a5c2b;
+}
+
+.nav-links {
+  display: flex;
+  gap: 20px;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+}
+
+.nav-links a:hover {
+  color: #0a5c2b;
+}
+
+.logout-btn {
+  background: #ef5350;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 8px;
+}
+
+/* 🌿 CONTAINER */
+.container {
+    display: flex;
+    justify-content: center;
+    padding: 40px;
+}
+
+/* 🌿 CARD */
+.card {
+    background: white;
+    width: 500px;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+    text-align: center;
+}
+
+h2 {
+    color: #2e7d32;
+}
+
+.username {
+    font-size: 18px;
+    margin: 10px 0;
+    font-weight: bold;
+}
+
+/* BUTTON */
+button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 10px;
+    margin-top: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    background: #2e7d32;
+    color: white;
+}
+
+button:hover {
+    transform: scale(1.05);
+}
+
+/* HISTORY */
+.history-container {
+    margin-top: 20px;
+    text-align: left;
+}
+
+.history-item {
+    background: #f1f8e9;
+    padding: 12px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    border-left: 5px solid #2e7d32;
+}
+
+#loading {
+    display: none;
+    color: #2e7d32;
+    margin-top: 10px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- 🌿 NAVBAR -->
+<div class="nav">
+  <div class="logo">🌿 AgriEcho</div>
+
+  <div class="nav-links">
+    <a href="/index">Home</a>
+    <a href="/profile">Profile</a>
+    <a href="/dashboard">Analytics</a>
+    <a href="#" onclick="logout()" class="logout-btn">Logout</a>
+  </div>
+</div>
+
+<!-- 🌿 CONTENT -->
+<div class="container">
+<div class="card">
+
+<h2>🌿 Farmer Dashboard</h2>
+
+<div class="username" id="username"></div>
+
+<button onclick="loadHistory()">📊 View Crop History</button>
+
+<div id="loading">⏳ Loading history...</div>
+
+<div class="history-container" id="history"></div>
+
+</div>
+</div>
+
+<script>
+
+// 👤 USER
+let user = localStorage.getItem("username");
+
+if (!user) {
+    window.location.href = "/";
+}
+
+document.getElementById("username").innerText =
+    "👋 Welcome, " + user;
+
+
+// 📊 LOAD HISTORY WITH FREQUENCY
+function loadHistory() {
+
+    document.getElementById("loading").style.display = "block";
+
+    fetch("/history?username=" + user)
+    .then(res => res.json())
+    .then(data => {
+
+        document.getElementById("loading").style.display = "none";
+
+        let freq = {};
+
+        data.forEach(item => {
+            freq[item.disease] = (freq[item.disease] || 0) + 1;
+        });
+
+        let html = "";
+
+        if (Object.keys(freq).length === 0) {
+            html = "<p>No history yet 🌱</p>";
+        } else {
+            for (let disease in freq) {
+
+                let color = "#66bb6a";
+
+                if (disease === "Early Blight") color = "#ff7043";
+                if (disease === "Late Blight") color = "#ef5350";
+
+                html += `
+                <div class="history-item" style="border-left:5px solid ${color}">
+                    🌿 ${disease} : <b>${freq[disease]}</b>
+                </div>
+                `;
+            }
+        }
+
+        document.getElementById("history").innerHTML = html;
+    });
+}
+
+
+// 🚪 LOGOUT
+function logout() {
+    localStorage.removeItem("username");
+    window.location.href = "/";
+}
+
+</script>
+
+</body>
+</html>
